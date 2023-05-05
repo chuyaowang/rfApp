@@ -30,7 +30,7 @@ def main():
             
             if result is not None:
                 with col_disp:
-                    colDisp(model = model, res = result)
+                    colDisp(model = model, res = result, train=train)
     
     # Prediction can be done right away if using previous model
     if (model_selection == "使用已有模型") and (train is not None) and (predict is not None):

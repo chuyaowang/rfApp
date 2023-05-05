@@ -3,19 +3,32 @@ from sklearn.preprocessing import OrdinalEncoder
 import matplotlib.colors as colors
 import numpy as np
 import matplotlib.pyplot as plt
+import itertools
+import pandas as pd
 
-def colDisp(model = None, res = None):
+def colDisp(model = None, res = None, train = None):
     st.header("查看分布")
     st.divider()
     
+    if train is not None:
+        showTrain = st.checkbox("查看训练数据", value=True)
+
     def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
         new_cmap = colors.LinearSegmentedColormap.from_list(
         'trunc({n},{a:.2f},{b:.2f})'.format(n=cmap.name, a=minval, b=maxval),
         cmap(np.linspace(minval, maxval, n)))
         return new_cmap
 
+        
     plot_step = 0.002
     n_classes = 3
+
+    if train is not None:
+        n_classes = 4
+        add = pd.DataFrame({"预测":itertools.repeat("训练数据",train.shape[0]),
+                            "δ29":train.iloc[:,1],
+                            "δ30":train.iloc[:,2]})
+        res = pd.concat([res,add])
 
     X = res.iloc[:,4:6].to_numpy()
 
@@ -42,7 +55,16 @@ def colDisp(model = None, res = None):
     plt.contourf(xx, yy, Z, cmap=cmap, alpha=.85)
 
     for (cat, group), col in zip(res.groupby("预测"), sampleColor):
-        ax.scatter(group["δ29"], group["δ30"], color=col, edgecolors = "black", marker="^", linestyle="", label=cat)
+        marker = "^"
+        alpha = 1
+        if cat == "训练数据":
+            marker = "o"
+            col = "#d3d3d3"
+            alpha = 0.3
+            if showTrain == False:
+                continue
+            
+        ax.scatter(group["δ29"], group["δ30"], color=col, edgecolors = "black", marker=marker, linestyle="", label=cat, alpha=alpha)
 
     plt.legend(title= "图例", fontsize=12)
     plt.xlabel("δ29", fontsize=12)

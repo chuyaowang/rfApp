@@ -71,6 +71,3 @@ def sideBar():
         return model_selection, clf, predict_read
     else: 
         return None, None, None
-    
-
-    
