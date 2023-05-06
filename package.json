@@ -10,7 +10,9 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "build": {
-    "files": ["build/**/*"],
+    "files": [
+      "build/**/*"
+    ],
     "directories": {
       "buildResources": "assets"
     }
