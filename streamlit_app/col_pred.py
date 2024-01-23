@@ -30,5 +30,3 @@ def colPred(model = None, pred = None):
         return st.session_state.result
     else:
         return None
-
-
